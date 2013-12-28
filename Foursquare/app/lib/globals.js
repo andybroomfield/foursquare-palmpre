@@ -7,7 +7,7 @@ fsq.Metrix = new Metrix();
 _globals.v="20110720";
 _globals.db = new Mojo.Depot({name:"feed"}, function(){logthis("depot OK");}, function(){logthis("depot FAIL");}); 
 _globals.rdb = new Mojo.Depot({name:"rec"}, function(){logthis("recdepot OK");}, function(){logthis("recdepot FAIL");}); 
-_globals.debugMode=false;
+_globals.debugMode=true;
 _globals.hasWeb=false;
 _globals.interval="00:20:00";
 //_globals.interval="00:05:00";
@@ -382,7 +382,7 @@ function foursquareGet(that,opts){
 			
 			opts.parameters["v"]=_globals.v;
 			logthis("getting endpoint data");
-			var url = "https://api.foursquare.com/v2/"+opts.endpoint;
+			var url = "http://api.foursquare.com/v2/"+opts.endpoint;
 			var request = new Ajax.Request(url, {
 			   method: 'get',
 			   evalJSON: 'true',
@@ -538,8 +538,8 @@ function foursquareGetMulti(that,opts){
 			return false;
 		}else{
 			logthis("getting endpoint data");
-			var url = "https://api.foursquare.com/v2/multi?requests="+encodeURIComponent(opts.endpoints)+"&oauth_token="+_globals.token+"&v="+_globals.v;
-			var urlu = "https://api.foursquare.com/v2/multi?requests="+(opts.endpoints)+"&oauth_token="+_globals.token;
+			var url = "http://api.foursquare.com/v2/multi?requests="+encodeURIComponent(opts.endpoints)+"&oauth_token="+_globals.token+"&v="+_globals.v;
+			var urlu = "http://api.foursquare.com/v2/multi?requests="+(opts.endpoints)+"&oauth_token="+_globals.token;
 			logthis("urlu="+urlu);
 			logthis("url="+url);
 			var request = new Ajax.Request(url, {
@@ -690,7 +690,7 @@ function foursquarePost(that,opts){
 			
 			opts.parameters["v"]=_globals.v;
 			
-			var url = "https://api.foursquare.com/v2/"+opts.endpoint;
+			var url = "http://api.foursquare.com/v2/"+opts.endpoint;
 			var request = new Ajax.Request(url, {
 			   method: 'post',
 			   evalJSON: 'true',
@@ -839,7 +839,7 @@ _globals.userSuccess = function(response){
 	 });*/
 	 
 	 
-	 var url = "https://api.foursquare.com/v1/friends.json";
+	 var url = "http://api.foursquare.com/v1/friends.json";
 	 var request = new Ajax.Request(url, {
 	   method: 'get',
 	   evalJSON: 'force',
@@ -886,7 +886,7 @@ _globals.userFailed = function(r){
 }
 
 _globals.relogin = function() {
-	var url="https://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token;
+	var url="http://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token;
 	
 	//this.controller.get('signupbutton').hide();
 		

@@ -382,7 +382,7 @@ NearbyVenuesAssistant.prototype.specialsSuccess = function(r){
 			this.controller.get("specials-count").show();
 			for(var v=0;v<specials.items.length;v++){
 				var venue=specials.items[v].venue;
-				//console.log("special venue="+venue);
+				//logthis("special venue="+venue);
 				if(venue.categories.length==0){
 					venue.primarycategory={};
 					venue.primarycategory.icon="images/no-cat.png";

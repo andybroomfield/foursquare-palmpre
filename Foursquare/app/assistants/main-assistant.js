@@ -70,10 +70,11 @@ logthis("getting location...");
 			if (event.errorCode==undefined){
 				//--> This is simply our 'returnValue: true' call. No data here.
 				logthis("true call");
-				this.controller.get("gps-message").update("Finding your location...");
+				//this.controller.get("gps-message").update("Finding your location...");
 
 			}else{
 				if (event.errorCode != 0){
+					this.controller.get("gps-message").update("Error Code" +event.errorCode );
 					logthis("location error");
 					this.failedLocationBound=this.failedLocation.bind(this);
 					this.failedLocationBound(event);
@@ -93,11 +94,12 @@ logthis("getting location...");
 					//--> Got a GPS Response, cache it for later!
 					_globals.gps = event;
 					
-					var acc=(_globals.gpsAccuracy != undefined)? Math.abs(_globals.gpsAccuracy): 750;
+					var acc=(_globals.gps.horizAccuracy != undefined)? Math.abs(_globals.gps.horizAccuracy): 750;
 					logthis("acc="+acc);
-					if(this.gpsCount<4){
+					if(this.gpsCount<20){
 						if(acc>=event.horizAccuracy || acc==0){
-							this.controller.get("gps-message").update("Found you!");
+							//this.controller.get("gps-message").update("Found you! inside count "+ acc);
+							this.controller.get("gps-message").update("GPS Accuracy "+ acc);
 
 							this.gpsSuccessBound(event);
 							
@@ -111,7 +113,7 @@ logthis("getting location...");
 						//--> Do your other stuff here and give up
 						/*		... code	
 							*/
-						this.controller.get("gps-message").update("Found you!");
+						this.controller.get("gps-message").update("Found you! outside count" + acc);
 
 						this.gpsSuccessBound(event);
 						
@@ -141,12 +143,14 @@ logthis("getting location...");
 		onSuccess: function(event){
 			if (event.errorCode){
 				logthis("tracker b canceled");
+				this.controller.get("gps-message").update("tracker b canceled");
 				this.trackGPSObjB.cancel();		//--> Stop tracking
 			}
 		}.bind(this),
 		onFailure: function(event){
 			//logthis("*** trackGPSObjB FAILURE: " + event.errorCode + " [" + gps.errorCodeDescription(event.errorCode) + "]");
 			logthis("tracker b failed: "+event.errorCode);
+			this.controller.get("gps-message").update("tracker b failed: "+event.errorCode);
 		}.bind(this)
 	});
 	
@@ -160,11 +164,13 @@ logthis("getting location...");
 		onSuccess: function(event){
 			if (event.errorCode){
 				logthis("tracker c canceled");
+				this.controller.get("gps-message").update("tracker c canceled");
 				this.trackGPSObjC.cancel();		//--> Stop tracking
 			}
 		}.bind(this),
 		onFailure: function(event){
 			logthis("tracker c failed: "+event.errorCode);
+			this.controller.get("gps-message").update("tracker c failed: "+event.errorCode);
 			//logthis("*** trackGPSObjC FAILURE: " + event.errorCode + " [" + gps.errorCodeDescription(event.errorCode) + "]");
 		}.bind(this)
 	});
@@ -197,7 +203,7 @@ MainAssistant.prototype.setup = function() {
 	    onSuccess: this.gpsSuccessBound,
 	    onFailure: this.failedLocation.bind(this)
 	    }
-	);*/ 
+	);*/
 	
 /*    this.controller.setupWidget("loginSpinner",
         this.attributes = {
@@ -259,11 +265,11 @@ MainAssistant.prototype.setup = function() {
 		this.login();
 	}else{
 		logthis("spinner should hide");
-/*		if(this.controller.get("loginSpinner").hide()){
+		if(this.controller.get("loginSpinner").hide()){
 			logthis("yay!");
 		}else{
 			logthis("booo!");
-		}*/
+		}
 	} 	
 
 }
@@ -315,18 +321,23 @@ MainAssistant.prototype.callInProgress = function(xmlhttp) {
 }
 
 
-MainAssistant.prototype.login = function(uname, pass){
+MainAssistant.prototype.login = function(){
 	logthis("logging in");
+	logthis("token = "+this.token);
+	this.controller.get("gps-message").update("logging in");
  	this.controller.get("loginSpinner").style.visibility='visible';
 	//this.controller.get("loginSpinner").mojo.start();
  
-	var url="https://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token;
-	
+	var url="http://api.foursquare.com/v2/multi";
+	logthis("url " +url);
 	//this.controller.get('signupbutton').hide();
 		
 	this.request = new Ajax.Request(url, {
 	   method: 'get',
-	   evalJSON: 'true',
+	   encoding: 'UTF-8',
+	   requestHeaders:['Authorization',null],
+	   evalJSON: true,
+	   parameters: 'requests='+encodeURIComponent("/users/self,/settings/all,/users/requests")+'&oauth_token='+this.token,
 	   onSuccess: this.loginRequestSuccess.bind(this),
 	   onFailure: this.loginRequestFailed.bindAsEventListener(this,false),
 	   onCreate: function(request){
@@ -343,10 +354,15 @@ MainAssistant.prototype.login = function(uname, pass){
 var userData;
 
 MainAssistant.prototype.loginRequestSuccess = function(response) {
-logthis("login ok");
-logthis(response.responseText);
+	logthis("login stage");
+	logthis("response status = "+response.status);
+	logthis("response state = "+response.readyState);
+	logthis("response text = "+response.responseText);
+	logthis("response json = "+response.responseJSON);
+	this.controller.get("gps-message").update("Got to login stage");
 	var j=response.responseJSON;
 	if(j.meta.code==200){
+		this.controller.get("gps-message").update("Code 200 in Login");
 		this.controller.window.clearTimeout(this.timeout);
 		userData = j.response.responses[0].response.user;
 		var settings=j.response.responses[1].response.settings;
@@ -545,6 +561,7 @@ MainAssistant.prototype.gpsSuccess = function(event) {
 		_globals.hacc=event.horizAccuracy;
 		_globals.vacc=event.vertAccuracy;
 		_globals.altitude=event.altitude;
+		_globals.gpsAccuracy = event.horizAccuracy;
 		_globals.gps=event;
 		
 		
