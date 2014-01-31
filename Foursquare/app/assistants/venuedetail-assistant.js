@@ -435,7 +435,7 @@ VenuedetailAssistant.prototype.swapTabs = function(what) {
 }
 
 VenuedetailAssistant.prototype.showGoogleMaps = function() {
-	//Mojo.Log.error('calling maps: ' + this.vgeolat + ',' + this.vgeolong);
+	Mojo.Log.error('calling maps: ' + this.vgeolat + ',' + this.vgeolong);
 	this.controller.serviceRequest('palm://com.palm.applicationManager', {
 		method:'open',
 			//parameters:{target: "maploc:("+this.vgeolat+","+this.vgeolong+")" } // googlemaps supports brackets, but not enyo bing maps
@@ -457,9 +457,9 @@ VenuedetailAssistant.prototype.getVenueInfo = function() {
 	   onFailure: this.getVenueInfoFailed.bind(this)
 	 });*/
 	 logthis(encodeURIComponent('/venues/'+this.venue.id+',/venues/'+this.venue.id+'/tips'));
-//	 Mojo.Log.error('/venues/'+this.venue.id+',/venues/'+this.venue.id+'/tips,/venues/'+this.venue.id+'/photos?group=venue,/venues/'+this.venue.id+'/photos?group=checkin,/venues/'+this.venue.id+'/herenow?limit=250');
+	 Mojo.Log.error('/venues/'+this.venue.id+',/venues/'+this.venue.id+'/tips,/venues/'+this.venue.id+'/photos?group=venue,/venues/'+this.venue.id+'/photos?group=checkin,/venues/'+this.venue.id+'/herenow?limit=250&v='+_globals.v);
 	 foursquareGetMulti(this, {
-	 	endpoints: '/venues/'+this.venue.id+',/venues/'+this.venue.id+'/tips,/venues/'+this.venue.id+'/photos?group=venue,/venues/'+this.venue.id+'/photos?group=checkin,/venues/'+this.venue.id+'/herenow?limit=250',
+	 	endpoints: '/venues/'+this.venue.id+',/venues/'+this.venue.id+'/tips,/venues/'+this.venue.id+'/photos?group=venue,/venues/'+this.venue.id+'/photos?group=checkin,/venues/'+this.venue.id+'/herenow?limit=250&v='+_globals.v,
 	 	requiresAuth: true,
 	 	debug: true,
 	 	ignoreErrors: false,
@@ -681,7 +681,7 @@ logthis("passed todo");
 	}
 	
 	
-//	Mojo.Log.error("vadd=%i, vcity=%i, vstate=%i",this.vaddress,this.vcity,this.vstate);
+	Mojo.Log.error("vadd=%i, vcity=%i, vstate=%i",this.vaddress,this.vcity,this.vstate);
 	
 	if (j.venue.location.crossStreet && !this.venue.crossstreet && !this.fromLaunch && this.controller.get("checkinVenueAddress").innerHTML.indexOf(j.venue.location.crossStreet)==-1) {
 	 this.controller.get("checkinVenueAddress").innerHTML += " ("+j.venue.location.crossStreet+")";
