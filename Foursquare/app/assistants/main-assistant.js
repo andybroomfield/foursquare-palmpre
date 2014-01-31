@@ -320,7 +320,7 @@ MainAssistant.prototype.login = function(uname, pass){
  	this.controller.get("loginSpinner").style.visibility='visible';
 	//this.controller.get("loginSpinner").mojo.start();
  
-	var url="https://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token;
+	var url="https://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token+"&v="+_globals.v;
 	
 	//this.controller.get('signupbutton').hide();
 		
