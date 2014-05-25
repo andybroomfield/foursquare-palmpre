@@ -4,7 +4,7 @@ window.maps = window.maps || {};
 fsq = {};
 logthis("globals started launch");
 fsq.Metrix = new Metrix();
-_globals.v="20110720";
+_globals.v="20140101";
 _globals.db = new Mojo.Depot({name:"feed"}, function(){logthis("depot OK");}, function(){logthis("depot FAIL");}); 
 _globals.rdb = new Mojo.Depot({name:"rec"}, function(){logthis("recdepot OK");}, function(){logthis("recdepot FAIL");}); 
 _globals.debugMode=true;
@@ -886,8 +886,7 @@ _globals.userFailed = function(r){
 }
 
 _globals.relogin = function() {
-	var url="http://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token;
-	
+	var url="https://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token+"&v="+_globals.v;	
 	//this.controller.get('signupbutton').hide();
 		
 	this.request = new Ajax.Request(url, {

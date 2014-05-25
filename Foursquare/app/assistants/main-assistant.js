@@ -327,9 +327,7 @@ MainAssistant.prototype.login = function(){
 	this.controller.get("gps-message").update("logging in");
  	this.controller.get("loginSpinner").style.visibility='visible';
 	//this.controller.get("loginSpinner").mojo.start();
- 
-	var url="http://api.foursquare.com/v2/multi";
-	logthis("url " +url);
+	var url="https://api.foursquare.com/v2/multi?requests="+encodeURIComponent("/users/self,/settings/all,/users/requests")+"&oauth_token="+this.token+"&v="+_globals.v;
 	//this.controller.get('signupbutton').hide();
 		
 	this.request = new Ajax.Request(url, {
