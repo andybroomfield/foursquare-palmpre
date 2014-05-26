@@ -168,7 +168,7 @@ AddTipDialogAssistant.prototype.tipSuccess = function(r) {
 	    controller.serviceRequest('palm://com.palm.downloadmanager/', {
 			method: 'upload',
 	        parameters: {
-			    'url': "https://api.foursquare.com/v2/photos/add",
+			    'url': "https://api.foursquare.com/v2/photos/add?v="+_globals.v,
 	            'fileLabel': 'photo',
 			    'fileName': this.photo,
 	            'postParameters': params,
